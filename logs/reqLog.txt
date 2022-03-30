@@ -1,7 +1,0 @@
-20220330	13:56:46	8c2dc7fa-b4eb-4f49-b200-917e933af939	/new-page.html	GET
-20220330	13:56:46	7bc9caf7-27be-4041-83bf-32379774c65d	/css/style.css	GET
-20220330	13:56:46	614eb1e7-4f65-4f3a-bf91-f5fb613031c6	/img/img1.jpg	GET
-20220330	13:57:51	f99f3504-7d64-434a-a385-f1541c1448a5	/new-page.html	GET
-20220330	13:58:48	f906c93a-84ef-47ce-a7cb-b27aad08811a	/new-page.html	GET
-20220330	13:58:48	89f92f3b-66bb-49ae-9f80-5ee7601aa86c	/css/style.css	GET
-20220330	13:58:48	f9d1cf96-03a5-448a-a88a-11a29bfb3dc4	/img/img1.jpg	GET
