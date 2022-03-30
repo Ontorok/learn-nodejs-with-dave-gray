@@ -1,0 +1,6 @@
+20220330	23:29:53	a1a31acd-f67b-4136-93ea-4b0adda268c2	Error: not allowed by CORS
+20220330	23:30:26	f9c1b4e1-6f80-4729-a4a6-e3d0996e26f2	Error: not allowed by CORS undefined
+20220330	23:30:55	1831980d-ee96-4b20-9e68-46df34dd209f	Error: not allowed by CORS /new-page
+20220330	23:31:22	c534edc3-dc4d-4df8-b125-918448051c71	Error: not allowed by CORS /new-page
+20220330	23:33:03	0db5b99d-b867-44c7-9cc6-4bc52a90c652	Error: not allowed by CORS[192.168.0.105]
+20220330	23:33:25	4eaa2251-3086-4188-977d-d78a24061d09	Error: not allowed by CORS[localhost]
