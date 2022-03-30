@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "start": "node src/server",
-    "dev": "nodemon src/server"
+    "start": "node server",
+    "dev": "nodemon server"
   },
   "dependencies": {
     "date-fns": "^2.28.0",

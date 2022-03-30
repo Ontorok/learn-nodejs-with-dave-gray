@@ -4,6 +4,14 @@ const PORT = process.env.PORT || 3500
 
 const app = express();
 
+// build-in- middleware to handle urlencoded data
+// in other words, form data
+// "Content-Type: application/x-www-form-urlencoded"
+app.use(express.urlencoded({ extended: false }));
+
+// build-in- middleware for json
+app.use(express.json())
+
 app.get('^/$|/index(.html)?', (req, res) => {
   // res.sendFile('./views/index.html', { root: __dirname })
   res.sendFile(path.join(__dirname, 'views', "index.html"))
