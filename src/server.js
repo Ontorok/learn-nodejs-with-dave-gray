@@ -11,5 +11,6 @@ const eventsEmitter = new EventsEmitter();
 eventsEmitter.on('log', message => logEvents(message));
 
 setTimeout(() => {
+    // emit event
     eventsEmitter.emit("log", "Log event emitted")
 }, 2000); 
