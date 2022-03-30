@@ -34,7 +34,7 @@ const two = (req, res, next) => {
   console.log('two');
   next()
 }
-const three = (req, res, next) => {
+const three = (req, res) => {
   console.log('three');
   res.send('Finished')
 }
