@@ -3,7 +3,7 @@ const path = require("path");
 const cors = require("cors");
 const { logger } = require("./middleware/logEvents");
 const { errorHander } = require("./middleware/errorHandler");
-const { rootRoute, subdirRoute } = require('./routes')
+const { rootRoute, subdirRoute, employeesRoute } = require('./routes')
 const PORT = process.env.PORT || 3500;
 
 const app = express();
@@ -43,7 +43,8 @@ app.use('/subdir', express.static(path.join(__dirname, "/public")));
 
 // routes handler
 app.use('/', rootRoute)
-app.use('/subdir', subdirRoute)
+app.use('/subdir', subdirRoute);
+app.use('/employees', employeesRoute)
 
 app.all("/*", (req, res) => {
   res.status(404);

@@ -9,3 +9,7 @@
 20220331	11:21:15	5b54c28d-21e5-4207-a0ee-fbf91833387b	Error: ENOENT: no such file or directory, stat 'E:\Personal\nodejs\subdir\views\index.html'[localhost]
 20220331	11:21:44	4df5e568-33cd-4c88-864d-04628a8cdd6b	Error: ENOENT: no such file or directory, stat 'E:\Personal\nodejs\subdir\views\index.html'[localhost]
 20220331	11:28:02	7db03397-b495-4656-bb86-76237ff8bd50	Error: ENOENT: no such file or directory, stat 'E:\Personal\nodejs\routes\views\index.html'[localhost]
+20220331	13:06:35	a51723fe-7c7e-4686-b933-4ef96e4450a7	ReferenceError: json is not defined[localhost]
+20220331	13:06:58	41f93f33-66ce-4114-ae46-128d2f65b100	Error: Cannot set headers after they are sent to the client[localhost]
+20220331	13:07:25	588162cb-2539-41f1-98c0-954a347d8aea	Error: Cannot set headers after they are sent to the client
+20220331	13:08:28	51062a8e-9d1d-466e-99e2-2830cc73764d	Error: Cannot set headers after they are sent to the client
