@@ -1,5 +1,5 @@
 const rootRoute = require('./root');
-const subdirRoute = require('./subdir');
-const employeesRoute = require('./api/employees')
+const employeesRoute = require('./api/employees');
+const usersRoute = require('./api/users');
 
-module.exports = { rootRoute, subdirRoute, employeesRoute }
+module.exports = { rootRoute, employeesRoute, usersRoute }

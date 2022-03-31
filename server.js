@@ -3,7 +3,7 @@ const path = require("path");
 const cors = require("cors");
 const { logger } = require("./middleware/logEvents");
 const { errorHander } = require("./middleware/errorHandler");
-const { rootRoute, subdirRoute, employeesRoute } = require('./routes');
+const { rootRoute, employeesRoute, usersRoute } = require('./routes');
 const corsOptions = require("./config/corsConfig");
 const PORT = process.env.PORT || 3500;
 
@@ -27,6 +27,7 @@ app.use('/', express.static(path.join(__dirname, "/public")));
 // routes handler
 app.use('/', rootRoute)
 app.use('/employees', employeesRoute)
+app.use('/users', usersRoute)
 
 app.all("/*", (req, res) => {
   res.status(404);

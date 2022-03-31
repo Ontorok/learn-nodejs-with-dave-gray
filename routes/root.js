@@ -8,7 +8,6 @@ router.get("^/$|/index(.html)?", (req, res) => {
 });
 
 router.get("/new-page(.html)?", (req, res) => {
-    console.log(req);
     res.sendFile(path.join(__dirname, "..", "views", "new-page.html"));
 });
 

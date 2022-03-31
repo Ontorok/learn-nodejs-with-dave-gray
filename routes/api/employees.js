@@ -1,7 +1,7 @@
 const express = require('express');
 const { getAllEmployees, getEmployee, createNewEmployee, updateEmployee, deleteEmployee } = require('../../controllers/employeeController');
 const router = express.Router();
-const employeesdata = require('../../data/employees.json')
+const employeesdata = require('../../models/employees.json')
 
 // router
 //   .route('/')

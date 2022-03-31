@@ -29,7 +29,6 @@ const serveFile = async (filePath, contentType, response) => {
       contentType === APPLICATION_JSON ? JSON.stringify(data) : data
     )
   } catch (err) {
-    console.log(err);
     emitter.emit('log', `${err.name}: ${err.message}`, 'errLog.txt');
     response.statusCode = 500;
     response.end()
