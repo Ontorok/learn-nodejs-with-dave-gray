@@ -3,7 +3,8 @@ const path = require("path");
 const cors = require("cors");
 const { logger } = require("./middleware/logEvents");
 const { errorHander } = require("./middleware/errorHandler");
-const { rootRoute, subdirRoute, employeesRoute } = require('./routes')
+const { rootRoute, subdirRoute, employeesRoute } = require('./routes');
+const corsOptions = require("./config/corsConfig");
 const PORT = process.env.PORT || 3500;
 
 const app = express();
@@ -12,26 +13,9 @@ const app = express();
 app.use(logger);
 
 // CORS (Cross Origin Resource Sharing)
-const whiteList = [
-  "https://www.facebook.com",
-  "http://127.0.0.1:5500",
-  "http://localhost:3500",
-];
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (whiteList.indexOf(origin) > -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error("not allowed by CORS"));
-    }
-  },
-  optionsSuccessStatus: 200,
-};
 app.use(cors(corsOptions));
 
-// build-in- middleware to handle urlencoded data
-// in other words, form data
-// "Content-Type: application/x-www-form-urlencoded"
+// build-in- middleware to handle urlencoded data  in other words form data
 app.use(express.urlencoded({ extended: false }));
 
 // build-in- middleware for json
@@ -39,11 +23,9 @@ app.use(express.json());
 
 // server static files
 app.use('/', express.static(path.join(__dirname, "/public")));
-app.use('/subdir', express.static(path.join(__dirname, "/public")));
 
 // routes handler
 app.use('/', rootRoute)
-app.use('/subdir', subdirRoute);
 app.use('/employees', employeesRoute)
 
 app.all("/*", (req, res) => {
