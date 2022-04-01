@@ -8,6 +8,9 @@ const userDB = {
 const fsPromises = require("fs").promises;
 const path = require("path");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+require("dotenv").config();
 
 const handleLogin = async (req, res) => {
   const { user, pwd } = req.body;
@@ -24,7 +27,35 @@ const handleLogin = async (req, res) => {
   const isMatchPassword = await bcrypt.compare(pwd, foundUser.password);
   if (isMatchPassword) {
     // create JWTs
-    res.status(200).json({ message: `User ${user} Logged in!!!` });
+    const accessToken = jwt.sign(
+      { username: foundUser.username },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "30s" }
+    );
+    const refreshToken = jwt.sign(
+      { username: foundUser.username },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    // saving refresh token with current user
+    const users = [...userDB.users];
+    const currentUserIndex = users.findIndex(
+      (u) => u.username === foundUser.username
+    );
+    users[currentUserIndex].refreshToken = refreshToken;
+    userDB.setUsers(users);
+    await fsPromises.writeFile(
+      path.join(__dirname, "..", "models", "users.json"),
+      JSON.stringify(userDB.users)
+    );
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    res.status(200).json({ message: `User ${user} Logged in!!!`, accessToken });
   } else {
     res.status(401).json({ message: "username  password is incorrect" });
   }

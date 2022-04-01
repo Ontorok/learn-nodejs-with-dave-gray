@@ -1,6 +1,10 @@
+// Core modules
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
+
+// Local modules
 const { logger } = require("./middleware/logEvents");
 const { errorHander } = require("./middleware/errorHandler");
 const {
@@ -8,14 +12,23 @@ const {
   employeesRoute,
   registerRoute,
   authRoute,
+  refreshRoute,
+  logoutRoute,
 } = require("./routes");
 const corsOptions = require("./config/corsConfig");
+const verifyJWT = require("./middleware/verifyJWT");
+const { handleRefreshToken } = require("./controllers/refreshTokenController");
+const credentials = require("./middleware/credentials");
 const PORT = process.env.PORT || 3500;
 
 const app = express();
 
 // custom middleware logger
 app.use(logger);
+
+// Handle options credentials check - before CORS
+// and fetch cookies credentials requiremnts
+app.use(credentials);
 
 // CORS (Cross Origin Resource Sharing)
 app.use(cors(corsOptions));
@@ -26,14 +39,21 @@ app.use(express.urlencoded({ extended: false }));
 // build-in- middleware for json
 app.use(express.json());
 
+// cookies middleware
+app.use(cookieParser());
+
 // server static files
 app.use("/", express.static(path.join(__dirname, "/public")));
 
 // routes handler
 app.use("/", rootRoute);
-app.use("/employees", employeesRoute);
 app.use("/register", registerRoute);
 app.use("/auth", authRoute);
+app.use("/refresh", refreshRoute);
+app.use("/logout", logoutRoute);
+
+app.use(verifyJWT);
+app.use("/employees", employeesRoute);
 
 app.all("/*", (req, res) => {
   res.status(404);
