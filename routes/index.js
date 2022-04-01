@@ -1,5 +1,6 @@
-const rootRoute = require('./root');
-const employeesRoute = require('./api/employees');
-const usersRoute = require('./api/users');
+const rootRoute = require("./root");
+const employeesRoute = require("./api/employees");
+const registerRoute = require("./register");
+const authRoute = require("./auth");
 
-module.exports = { rootRoute, employeesRoute, usersRoute }
+module.exports = { rootRoute, employeesRoute, registerRoute, authRoute };

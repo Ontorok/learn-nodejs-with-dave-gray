@@ -1,10 +1,18 @@
 [
   {
+    "username": "rima",
+    "password": "$2b$10$5BsAl3btDc0evlomedLi.OcJlY7ygRRFtDzqRwnnbn5EXRdCP3bz6"
+  },
+  {
     "username": "nasir",
-    "password": "$2b$10$LqJQskrEIDPVSuCt7A8AO./dFwt6hiy.Om50XlL5qmfe.fxlAn5c2"
+    "password": "$2b$10$rDS3q3/fE.zQhCjp18d0LO0E05k/cLPyZXgPyqwMf8sDjWUy5ATvW"
   },
   {
     "username": "nasif",
-    "password": "$2b$10$gZuVjdmBuNF2iJZGW9tDyuyQOUz46fvoW17iUmOVi22CFoBIDaLZC"
+    "password": "$2b$10$rSM.lF42GfdwU3qdRNXFJ.voAgMCAmP/tpETTjiEpDdb1qvtC1tJ."
+  },
+  {
+    "username": "jahir",
+    "password": "$2b$10$YIGEh1jXSoXe1i.uB2C1beQ7uZ.IhuClXZmZtMISFnFcUKmTzL0.e"
   }
 ]
