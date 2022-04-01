@@ -66,12 +66,22 @@ const handleLogin = async (req, res) => {
   if (isMatchPassword) {
     // create JWTs
     const accessToken = jwt.sign(
-      { username: foundUser.username },
+      {
+        UserInfo: {
+          username: foundUser.username,
+          roles: foundUser.roles,
+        },
+      },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "30s" }
+      { expiresIn: "1d" }
     );
     const refreshToken = jwt.sign(
-      { username: foundUser.username },
+      {
+        UserInfo: {
+          username: foundUser.username,
+          roles: foundUser.roles,
+        },
+      },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: "1d" }
     );

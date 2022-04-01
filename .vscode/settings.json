@@ -1,6 +1,7 @@
 {
   "workbench.colorTheme": "Learn with Sumit - Blue Velvet",
   "editor.formatOnSave": true,
+  "editor.hover.enabled": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
     "source.fixAll.tslint": true,
