@@ -1,1 +1,17 @@
-[{"username":"nasir","password":"$2b$10$6GNDquEhs51kXSlv8dPXNeUkWuIOtzFbquROQExGqxLChnQogQBLG","refreshToken":""},{"username":"rima","password":"$2b$10$wIhSA3yLMQyj2aZ/ViFh7Oy62saPJvwV.Dm0TEMELeEIn4KDhLtfW","refreshToken":""}]
+[
+  {
+    "username": "nasir",
+    "password": "$2b$10$B2/pbPu72YHNMAnwcWrSOuDMPeoirAsixUV8b0Be9pIETf81V0p6a",
+    "roles": ["5150", "1984", "1754"]
+  },
+  {
+    "username": "ahmed",
+    "password": "$2b$10$SkWjrr3cRwUW7DzKu1.v3.iAaQyS2SowLI9Y9.lnkK9RYHG7lj8Vy",
+    "roles": ["1754"]
+  },
+  {
+    "username": "rima",
+    "password": "$2b$10$r8M6SHOqGryZB2uasOO/genWG1x4NNmH65PdSq4loI2w5pmkqUJsi",
+    "roles": ["1984", "1754"]
+  }
+]

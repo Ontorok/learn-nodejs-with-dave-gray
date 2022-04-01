@@ -5,6 +5,8 @@ const userDB = {
   },
 };
 
+const ROLE_LIST = require("../constants/roleList");
+
 const fsPromises = require("fs").promises;
 const path = require("path");
 const bcrypt = require("bcrypt");
@@ -13,7 +15,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const handleNewUser = async (req, res) => {
-  const { user, pwd } = req.body;
+  const { user, pwd, roles } = req.body;
   if (!user || !pwd)
     return res
       .status(400)
@@ -32,7 +34,9 @@ const handleNewUser = async (req, res) => {
     const newUser = {
       username: user,
       password: hashedPwd,
+      roles,
     };
+
     userDB.setUsers([...userDB.users, newUser]);
     await fsPromises.writeFile(
       path.join(__dirname, "..", "models", "users.json"),
