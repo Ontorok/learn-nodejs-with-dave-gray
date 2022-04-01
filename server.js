@@ -7,17 +7,9 @@ const cookieParser = require("cookie-parser");
 // Local modules
 const { logger } = require("./middleware/logEvents");
 const { errorHander } = require("./middleware/errorHandler");
-const {
-  rootRoute,
-  employeesRoute,
-  registerRoute,
-  authRoute,
-  refreshRoute,
-  logoutRoute,
-} = require("./routes");
+const { rootRoute, employeesRoute, authRoute } = require("./routes");
 const corsOptions = require("./config/corsConfig");
 const verifyJWT = require("./middleware/verifyJWT");
-const { handleRefreshToken } = require("./controllers/refreshTokenController");
 const credentials = require("./middleware/credentials");
 const PORT = process.env.PORT || 3500;
 
@@ -47,10 +39,7 @@ app.use("/", express.static(path.join(__dirname, "/public")));
 
 // routes handler
 app.use("/", rootRoute);
-app.use("/register", registerRoute);
 app.use("/auth", authRoute);
-app.use("/refresh", refreshRoute);
-app.use("/logout", logoutRoute);
 
 app.use(verifyJWT);
 app.use("/employees", employeesRoute);
