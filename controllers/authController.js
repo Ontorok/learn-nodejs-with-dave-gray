@@ -1,18 +1,8 @@
-const userDB = {
-  users: require("../models/users.json"),
-  setUsers: function (data) {
-    this.users = data;
-  },
-};
-
+const User = require("../models/User");
 const ROLE_LIST = require("../constants/roleList");
 
-const fsPromises = require("fs").promises;
-const path = require("path");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
-require("dotenv").config();
 
 const handleNewUser = async (req, res) => {
   const { user, pwd, roles } = req.body;
@@ -22,7 +12,7 @@ const handleNewUser = async (req, res) => {
       .json({ message: "username and password are required!!" });
 
   // check for duplicate username;
-  const duplicateUser = userDB.users.find((u) => u.username === user);
+  const duplicateUser = await User.findOne({ username: user }).exec();
   if (duplicateUser)
     return res.status(409).json({ message: "user already registered" });
 
@@ -31,20 +21,17 @@ const handleNewUser = async (req, res) => {
     const hashedPwd = await bcrypt.hash(pwd, 10);
 
     // store the new user
-    const newUser = {
+    const savedUser = await User.create({
       username: user,
       password: hashedPwd,
-      roles,
-    };
+      roles: roles,
+    });
 
-    userDB.setUsers([...userDB.users, newUser]);
-    await fsPromises.writeFile(
-      path.join(__dirname, "..", "models", "users.json"),
-      JSON.stringify(userDB.users)
-    );
+    console.log(savedUser);
+
     res
       .status(201)
-      .json({ message: `User created with name : ${newUser.username}` });
+      .json({ message: `User created with name : ${savedUser.username}` });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
