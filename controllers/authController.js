@@ -73,11 +73,8 @@ const handleLogin = async (req, res) => {
     );
 
     // saving refresh token with current user
-    await User.findOneAndUpdate({
-      username: foundUser.username
-    }, {
-      refreshToken: refreshToken
-    })
+    foundUser.refreshToken = refreshToken;
+    const result = await foundUser.save()
 
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
@@ -98,13 +95,14 @@ const handleRefreshToken = async (req, res) => {
 
   const refreshToken = cookies.jwt;
 
-  const loggedInUser = await User.findOne({
-    refreshToken: refreshToken
-  })
+  const loggedInUser = await User
+    .findOne({ refreshToken })
+    .exec()
   if (!loggedInUser) return res.sendStatus(403); // Forbidden
 
   // evaluate jwt
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+    console.log(decoded);
     if (err || loggedInUser.username !== decoded.UserInfo.username)
       return res.sendStatus(403); // Forbidden
     const accessToken = jwt.sign(
@@ -129,9 +127,9 @@ const handleLogout = async (req, res) => {
   const refreshToken = cookies.jwt;
 
   // if refresh in db?
-  const loggedInUser = await User.findOne({
-    refreshToken: refreshToken
-  })
+  const loggedInUser = await User
+    .findOne({ refreshToken })
+    .exec()
 
   if (!loggedInUser) {
     res.clearCookie("jwt", {
@@ -143,11 +141,8 @@ const handleLogout = async (req, res) => {
   }
 
   // Delete the refresh in the db
-  await User.findOneAndUpdate({
-    username: loggedInUser.username
-  }, {
-    refreshToken: ""
-  })
+  loggedInUser.refreshToken = ''
+  const result = await loggedInUser.save()
 
 
   res.clearCookie("jwt", {

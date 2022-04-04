@@ -37,11 +37,6 @@ const createNewEmployee = async (req, res) => {
 const updateEmployee = async (req, res) => {
 
   const { id, firstName, lastName } = req.body
-  if (!firstName || !lastName) {
-    return res
-      .status(404)
-      .json({ message: 'First Name and Last name is required' });
-  }
 
   const employee = await Employee.findOne({ _id: id })
   if (!employee) {
@@ -50,23 +45,28 @@ const updateEmployee = async (req, res) => {
       .json({ message: `Employee ID ${id} not found` });
   }
 
-  const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-    firstName, lastName
-  }, { returnOriginal: false })
+  if (firstName) employee.firstName = firstName;
+  if (lastName) employee.lastName = lastName;
+
+  const updatedEmployee = await employee.save()
   res.status(200).json(updatedEmployee);
 };
 
 const deleteEmployee = async (req, res) => {
 
-  const employee = await Employee.findById(req.params.id)
+  const employee = await Employee
+    .findOne({ _id: req.params.id })
+    .exec()
   if (!employee) {
     return res
       .status(400)
       .json({ message: `Employee ID ${req.body.id} not found` });
   }
-  await Employee.findByIdAndRemove(req.params.id)
+  const result = await employee.deleteOne({
+    _id: req.params.id
+  })
   res.status(200).json({
-    message: `record deleted with the name: ${employee
+    message: `record deleted with the name: ${result
       .firstName}`
   });
 };
