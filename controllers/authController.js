@@ -27,8 +27,6 @@ const handleNewUser = async (req, res) => {
       roles: roles,
     });
 
-    console.log(savedUser);
-
     res
       .status(201)
       .json({ message: `User created with name : ${savedUser.username}` });
@@ -44,7 +42,8 @@ const handleLogin = async (req, res) => {
     return res
       .status(400)
       .json({ message: "username and password are required!!" });
-  const foundUser = userDB.users.find((u) => u.username === user);
+
+  const foundUser = await User.findOne({ username: user }).exec();
 
   if (!foundUser) return res.status(401).json({ message: "user not found" });
 
@@ -60,7 +59,7 @@ const handleLogin = async (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "3600s" }
     );
     const refreshToken = jwt.sign(
       {
@@ -74,16 +73,12 @@ const handleLogin = async (req, res) => {
     );
 
     // saving refresh token with current user
-    const users = [...userDB.users];
-    const currentUserIndex = users.findIndex(
-      (u) => u.username === foundUser.username
-    );
-    users[currentUserIndex].refreshToken = refreshToken;
-    userDB.setUsers(users);
-    await fsPromises.writeFile(
-      path.join(__dirname, "..", "models", "users.json"),
-      JSON.stringify(userDB.users)
-    );
+    await User.findOneAndUpdate({
+      username: foundUser.username
+    }, {
+      refreshToken: refreshToken
+    })
+
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
       // sameSite: "none",
@@ -96,21 +91,21 @@ const handleLogin = async (req, res) => {
   }
 };
 
-const handleRefreshToken = (req, res) => {
+const handleRefreshToken = async (req, res) => {
   const cookies = req.cookies;
-  console.log({ cookies: cookies.jwt });
+
   if (!cookies?.jwt) return res.sendStatus(401);
 
   const refreshToken = cookies.jwt;
 
-  const loggedInUser = userDB.users.find(
-    (u) => u.refreshToken === refreshToken
-  );
+  const loggedInUser = await User.findOne({
+    refreshToken: refreshToken
+  })
   if (!loggedInUser) return res.sendStatus(403); // Forbidden
 
   // evaluate jwt
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
-    if (err || loggedInUser.username !== decoded.username)
+    if (err || loggedInUser.username !== decoded.UserInfo.username)
       return res.sendStatus(403); // Forbidden
     const accessToken = jwt.sign(
       {
@@ -120,7 +115,7 @@ const handleRefreshToken = (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "30s" }
+      { expiresIn: "3600s" }
     );
     res.json({ accessToken });
   });
@@ -134,25 +129,27 @@ const handleLogout = async (req, res) => {
   const refreshToken = cookies.jwt;
 
   // if refresh in db?
-  const loggedInUser = userDB.users.find(
-    (u) => u.refreshToken === refreshToken
-  );
+  const loggedInUser = await User.findOne({
+    refreshToken: refreshToken
+  })
+
   if (!loggedInUser) {
-    res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      // sameSite: "none",
+      // secure: true
+    });
     return res.sendStatus(204); // No content
   }
 
   // Delete the refresh in the db
-  const users = [...userDB.users];
-  const loggedInUserIndex = users.findIndex(
-    (u) => u.refreshToken === loggedInUser.refreshToken
-  );
-  users[loggedInUserIndex].refreshToken = "";
-  userDB.setUsers(users);
-  await fsPromises.writeFile(
-    path.join(__dirname, "..", "models", "users.json"),
-    JSON.stringify(users)
-  );
+  await User.findOneAndUpdate({
+    username: loggedInUser.username
+  }, {
+    refreshToken: ""
+  })
+
+
   res.clearCookie("jwt", {
     httpOnly: true,
     // sameSite: "none",
