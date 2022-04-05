@@ -50,6 +50,7 @@ const handleLogin = async (req, res) => {
   // evaluate password
   const isMatchPassword = await bcrypt.compare(pwd, foundUser.password);
   if (isMatchPassword) {
+    const roles = foundUser.roles;
     // create JWTs
     const accessToken = jwt.sign(
       {
@@ -59,7 +60,7 @@ const handleLogin = async (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "3600s" }
+      { expiresIn: "30s" }
     );
     const refreshToken = jwt.sign(
       {
@@ -78,11 +79,16 @@ const handleLogin = async (req, res) => {
 
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
-      // sameSite: "none",
-      // secure: true,
+      sameSite: "none",
+      secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.status(200).json({ message: `User ${user} Logged in!!!`, accessToken });
+    res.status(200).json({
+      message: `User ${user} Logged in!!!`, data: {
+        accessToken,
+        roles
+      }
+    });
   } else {
     res.status(401).json({ message: "username  password is incorrect" });
   }
@@ -134,8 +140,8 @@ const handleLogout = async (req, res) => {
   if (!loggedInUser) {
     res.clearCookie("jwt", {
       httpOnly: true,
-      // sameSite: "none",
-      // secure: true
+      sameSite: "none",
+      secure: true
     });
     return res.sendStatus(204); // No content
   }
@@ -147,8 +153,8 @@ const handleLogout = async (req, res) => {
 
   res.clearCookie("jwt", {
     httpOnly: true,
-    // sameSite: "none",
-    // secure: true,
+    sameSite: "none",
+    secure: true,
   });
   res.sendStatus(204);
 };
