@@ -60,7 +60,7 @@ const handleLogin = async (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "30s" }
+      { expiresIn: "10s" }
     );
     const refreshToken = jwt.sign(
       {
@@ -70,12 +70,12 @@ const handleLogin = async (req, res) => {
         },
       },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "15s" }
     );
 
     // saving refresh token with current user
     foundUser.refreshToken = refreshToken;
-    const result = await foundUser.save()
+    const result = await foundUser.save();
 
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
@@ -84,10 +84,11 @@ const handleLogin = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
     res.status(200).json({
-      message: `User ${user} Logged in!!!`, data: {
+      message: `User ${user} Logged in!!!`,
+      data: {
         accessToken,
-        roles
-      }
+        roles,
+      },
     });
   } else {
     res.status(401).json({ message: "username  password is incorrect" });
@@ -101,14 +102,11 @@ const handleRefreshToken = async (req, res) => {
 
   const refreshToken = cookies.jwt;
 
-  const loggedInUser = await User
-    .findOne({ refreshToken })
-    .exec()
+  const loggedInUser = await User.findOne({ refreshToken }).exec();
   if (!loggedInUser) return res.sendStatus(403); // Forbidden
 
   // evaluate jwt
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
-    console.log(decoded);
     if (err || loggedInUser.username !== decoded.UserInfo.username)
       return res.sendStatus(403); // Forbidden
     const accessToken = jwt.sign(
@@ -119,7 +117,7 @@ const handleRefreshToken = async (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "3600s" }
+      { expiresIn: "10s" }
     );
     res.json({ accessToken });
   });
@@ -133,23 +131,20 @@ const handleLogout = async (req, res) => {
   const refreshToken = cookies.jwt;
 
   // if refresh in db?
-  const loggedInUser = await User
-    .findOne({ refreshToken })
-    .exec()
+  const loggedInUser = await User.findOne({ refreshToken }).exec();
 
   if (!loggedInUser) {
     res.clearCookie("jwt", {
       httpOnly: true,
       sameSite: "none",
-      secure: true
+      secure: true,
     });
     return res.sendStatus(204); // No content
   }
 
   // Delete the refresh in the db
-  loggedInUser.refreshToken = ''
-  const result = await loggedInUser.save()
-
+  loggedInUser.refreshToken = "";
+  const result = await loggedInUser.save();
 
   res.clearCookie("jwt", {
     httpOnly: true,
