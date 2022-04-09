@@ -77,6 +77,8 @@ const handleLogin = async (req, res) => {
     foundUser.refreshToken = refreshToken;
     const result = await foundUser.save();
 
+    const { password, __v, createdAt, updatedAt, ...remainings } = foundUser._doc
+
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
       sameSite: "none",
@@ -88,6 +90,7 @@ const handleLogin = async (req, res) => {
       data: {
         accessToken,
         roles,
+        user: remainings
       },
     });
   } else {
