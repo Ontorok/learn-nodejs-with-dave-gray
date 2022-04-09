@@ -60,7 +60,7 @@ const handleLogin = async (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "10s" }
+      { expiresIn: "3600s" }
     );
     const refreshToken = jwt.sign(
       {
@@ -70,7 +70,7 @@ const handleLogin = async (req, res) => {
         },
       },
       process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "15s" }
+      { expiresIn: "3600s" }
     );
 
     // saving refresh token with current user
@@ -120,7 +120,7 @@ const handleRefreshToken = async (req, res) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "10s" }
+      { expiresIn: "3600s" }
     );
     res.json({ accessToken });
   });
@@ -157,9 +157,16 @@ const handleLogout = async (req, res) => {
   res.sendStatus(204);
 };
 
+const getAuthUser = async (req, res) => {
+  const foundUser = await User.findOne({ username: req.user }).exec();
+  const { password, __v, createdAt, updatedAt, refreshToken, ...remainings } = foundUser._doc
+  res.status(200).json(remainings)
+}
+
 module.exports = {
   handleNewUser,
   handleLogin,
   handleRefreshToken,
   handleLogout,
+  getAuthUser
 };

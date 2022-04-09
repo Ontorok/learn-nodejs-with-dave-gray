@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const verifyJWT = (req, res, next) => {
-  let test = "fasfasf".startsWith;
   const authHeader =
     req.headers["authorization"] || req.headers["Authorization"]; // Bearer token
   if (!authHeader?.startsWith("Bearer ")) {
